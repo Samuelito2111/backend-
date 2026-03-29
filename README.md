@@ -1,5 +1,3 @@
-Rozumiem, tu je osekané a vecné README.md, ktoré sa sústredí len na to, čo aplikácia robí a ako vyzerajú jej dáta.
-
 🎓 Študentský Dashboard
 Moderná webová aplikácia na prehľadnú správu a zobrazovanie zoznamu študentov. Projekt prepája Python (Flask) backend ako zdroj dát a HTML/CSS/JS frontend s responzívnym rozhraním.
 
