@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Triedy | Search Edition</title>
+    <style>
+        :root {
+            --accent: #6366f1; 
+            --bg: #0f172a;    
+            --card-bg: #1e293b; 
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --search-bg: #334155;
+        }
+
+        body { 
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main);
+            margin: 0; 
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        header { text-align: center; margin-bottom: 40px; }
+
+        h1 { 
+            font-size: 3rem; 
+            font-weight: 900; 
+            margin: 0 0 20px 0;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        /* VYHĽADÁVACÍ PANEL */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 50px;
+            position: relative;
+        }
+
+        #search {
+            width: 100%;
+            padding: 15px 25px;
+            background: var(--search-bg);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        #search:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+            background: #3d4b5f;
+        }
+
+        /* MRIEŽKA NA 4 STĹPCE */
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px;
+        }
+
+        /* Responzivita */
+        @media (max-width: 1200px) { .student-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .student-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 550px) { .student-grid { grid-template-columns: 1fr; } }
+
+        /* Karta */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .photo-box {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 15px;
+            border-radius: 25px;
+            overflow: hidden;
+            background: #0f172a;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .full-name { 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            margin: 0;
+            color: #fff;
+        }
+
+        .nickname { 
+            color: var(--accent);
+            font-style: italic;
+            font-size: 0.85rem;
+            margin: 5px 0 15px 0;
+            display: block;
+        }
+
+        .id-badge {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-dim);
+            padding: 4px 0;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            margin-top: auto;
+        }
+
+        #status { text-align: center; color: #fb7185; margin-bottom: 20px; font-weight: 500; }
+        
+        /* Hláška keď sa nič nenájde */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Naša Trieda</h1>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Hľadať študenta alebo prezývku..." onkeyup="filterData()">
+        </div>
+    </header>
+
+    <div id="status"></div>
+    <div id="student-container" class="student-grid">
+        </div>
+</div>
+
+<script>
+    let allStudents = []; // Sem si uložíme všetkých študentov pre filtrovanie
+
+    window.onload = fetchData;
+
+    async function fetchData() {
+        const statusDiv = document.getElementById('status');
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api');
+            if (!response.ok) throw new Error();
+            const data = await response.json();
+            allStudents = data.students; // Uložíme dáta
+            renderStudents(allStudents); // Zobrazíme všetkých
+        } catch (err) {
+            statusDiv.innerHTML = "⚠️ Backend neodpovedá. Skontroluj, či beží Python server.";
+        }
+    }
+
+    function renderStudents(students) {
+        const container = document.getElementById('student-container');
+        
+        if (students.length === 0) {
+            container.innerHTML = `<div class="no-results">Nenašli sa žiadni študenti pre toto hľadanie.</div>`;
+            return;
+        }
+
+        container.innerHTML = students.map(s => `
+            <div class="card">
+                <div>
+                    <div class="photo-box">
+                        <img src="${s.image}" 
+                             class="student-photo" 
+                             alt="${s.name}" 
+                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}+${encodeURIComponent(s.surname)}&background=6366f1&color=fff'">
+                    </div>
+                    <h3 class="full-name">${s.name} ${s.surname}</h3>
+                    <span class="nickname">${s.nickname ? '@' + s.nickname : ''}</span>
+                </div>
+                <div class="id-badge">ID: ${s.id.toString().padStart(2, '0')}</div>
+            </div>
+        `).join('');
+    }
+
+    // Funkcia na filtrovanie dát
+    function filterData() {
+        const query = document.getElementById('search').value.toLowerCase();
+        
+        const filtered = allStudents.filter(s => {
+            const fullName = `${s.name} ${s.surname}`.toLowerCase();
+            const nickname = (s.nickname || "").toLowerCase();
+            return fullName.includes(query) || nickname.includes(query);
+        });
+
+        renderStudents(filtered);
+    }
+</script>
+
+</body>
+</html>
