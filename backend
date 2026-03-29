@@ -1,0 +1,53 @@
+from flask import Flask, jsonify
+from flask_cors import CORS # Nezabudni: pip install flask-cors
+
+app = Flask(__name__)
+CORS(app) # Toto je kľúčové pre prepojenie s HTML!
+
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
+# Databáza 10 študentov S FOTKAMI (vymeň URL za svoje!)
+databaza = {
+    "students": [
+        {"id": 1, "name": "Janka", "surname": "Vargova", "nickname": "Dzejna", "image": "https://cdn.rafled.com/anime-icons/images/81e23036b7d369960838715ebff82b264046fcb4b290aa647b6dcb29e36f5f1c.jpg"},
+        {"id": 2, "name": "Samo", "surname": "Haring", "nickname": "Samuelito", "image": "https://cdn.discordapp.com/attachments/1415008017010786394/1487837336246030518/hq720.jpg?ex=69ca97ff&is=69c9467f&hm=237148fa707fe0952aba50a33c044be51914feb2e1914573a263ec2babc70686&"},
+        {"id": 3, "name": "Matej", "surname": "Randziak", "nickname": "Moarari", "image": "https://preview.redd.it/is-there-a-possibility-that-saitama-will-reconnect-with-his-v0-a68r1dfui7ce1.jpeg?auto=webp&s=af4114caff35705f8bc4fc3a7dd04e39427e4480"},
+        {"id": 4, "name": "Matus", "surname": "Bucko", "nickname": "Kutik", "image": "https://preview.redd.it/mori-is-attractive-and-heres-why-v0-bvnzwyca9kqd1.jpg?width=640&crop=smart&auto=webp&s=4cd1fa8872be343b59bf92f74281b2097bf73241"},
+        {"id": 5, "name": "Tomas", "surname": "Jurcak", "nickname": "Jurcacik", "image": "https://pbs.twimg.com/media/G7WAlLvX0AAemKg.jpg"},
+        {"id": 6, "name": "Adrian", "surname": "Cervenka", "nickname": "BigRed", "image": "https://ih1.redbubble.net/image.5553077236.8492/raf,360x360,075,t,fafafa:ca443f4786.jpg"},
+        {"id": 7, "name": "Marcus", "surname": "Martis", "nickname": "Jew", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXbhXxoPTWTWEf6rapVsCXNTkkrICigSNfVg&s"},
+        {"id": 8, "name": "Martin", "surname": "Jelinek", "nickname": "Jeliman", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/68c9112594d10f7e9dd591c4/formal-photo/94387b0f-c431-49e2-b562-6a357f415c2d"},
+        {"id": 9, "name": "Milan", "surname": "Kokina", "nickname": "Nalimovc", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5efee63f1b04f230d150c5ce/formal-photo/e18f5e4d-9a8d-4196-9e18-30ebf1b60dc4"},
+        {"id": 10, "name": "Marko", "surname": "Mihalicka", "nickname": "Nema este", "image": "https://img.hockeyslovakia.sk/Player/231280/MarkoMIHALI%C4%8CKA.jpg"},
+        {"id": 11, "name": "Samuel", "surname": "Uhrík", "nickname": "Nema este", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6592fd86dc8b723834ae04/formal-photo/7ab0b847-749f-42e5-af17-ca7f8a12f32d"},
+        {"id": 12, "name": "Matus", "surname": "Holecka", "nickname": "Holenka", "image": "https://eshop.banchem.sk/userdata/cache/images/storecards/000193/600/000193_mop%20strapcovy%20bavlneny%20140%20180%20220%20250%20IT-600x800.jpg"},
+        {"id": 13, "name": "Lukas", "surname": "Vindis", "nickname": "Vindik", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6596c286dc8b72383529e0/formal-photo/6ac3297a-522f-460c-9c0f-6ce714ef6c39"},
+        {"id": 14, "name": "Pato", "surname": "Korba", "nickname": "Nema este", "image": "https://www.zeriavplus.sk/wp-content/uploads/2022/11/bager-vykopove-prace-liptovsky-mikulas.jpg"},
+        {"id": 15, "name": "Daniel", "surname": "Barta", "nickname": "Nema este", "image": "https://pbs.twimg.com/media/G7WAlLvX0AAemKg.jpg"},
+        {"id": 16, "name": "Tomas", "surname": "Jurcak", "nickname": "Nema este", "image": "https://pbs.twimg.com/media/G7WAlLvX0AAemKg.jpg"},
+        {"id": 17, "name": "Tomas", "surname": "Jurcak", "nickname": "Nema este", "image": "https://pbs.twimg.com/media/G7WAlLvX0AAemKg.jpg"},
+        {"id": 18, "name": "Tomas", "surname": "Jurcak", "nickname": "Jurcacik", "image": "https://pbs.twimg.com/media/G7WAlLvX0AAemKg.jpg"},
+        {"id": 19, "name": "Tomas", "surname": "Jurcak", "nickname": "Jurcacik", "image": "https://pbs.twimg.com/media/G7WAlLvX0AAemKg.jpg"},
+        {"id": 20, "name": "Tomas", "surname": "Jurcak", "nickname": "Jurcacik", "image":"https://pbs.twimg.com/media/G7WAlLvX0AAemKg.jpg"}
+    ]
+}
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Vitajte v studentskom API s fotkami!"})
+
+@app.route('/api')
+def get_all_students():
+    return jsonify(databaza)
+
+@app.route("/api/student/<int:student_id>")
+def get_one_student(student_id):
+    # Vyhľadávanie podľa ID
+    student = next((s for s in databaza["students"] if s["id"] == student_id), None)
+    if student:
+        return jsonify(student)
+    return jsonify({"error": "Student nenajdeny"}), 404
+
+if __name__ == '__main__':
+    # Spustíme na porte 5000
+    app.run(port=5000, debug=True)
