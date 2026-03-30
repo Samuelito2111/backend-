@@ -31,4 +31,4 @@ CORS Policy: Pre správne fungovanie komunikácie musí byť v Python skripte po
 Konfigurácia portov: Webová stránka komunikuje s portom 5000. Ak v backende dôjde k zmene portu, je potrebné túto zmenu vykonať aj vo funkcii fetchData v súbore index.html.
 
 Odkaz na projekt
-[Zobraziť živú ukážku (GitHub Pages)](https://samuelito2111.github.io/backend-/)
+Pozri si stránku tu: [Otvoriť stranka.html](https://samuelito2111.github.io/backend-/stranka.html)
