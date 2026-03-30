@@ -29,3 +29,6 @@ image: URL adresa profilového obrázka.
 CORS Policy: Pre správne fungovanie komunikácie musí byť v Python skripte povolený CORS(app).
 
 Konfigurácia portov: Webová stránka komunikuje s portom 5000. Ak v backende dôjde k zmene portu, je potrebné túto zmenu vykonať aj vo funkcii fetchData v súbore index.html.
+
+Odkaz na projekt
+[Zobraziť živú ukážku (GitHub Pages)](https://samuelito2111.github.io/backend-/)
