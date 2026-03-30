@@ -1,0 +1,144 @@
+{
+  "students": [
+    {
+      "id": 1,
+      "image": "https://images-ext-1.discordapp.net/external/yeLMYDmagoC9SQhnO4ZNrtdkWuQ9zxNAcXAhBPZHi4c/https/i.pinimg.com/736x/27/00/24/2700247a1026dcda5effff4328dde1d5.jpg?format=webp",
+      "name": "Janka",
+      "nickname": "Dzejna",
+      "surname": "Vargova"
+    },
+    {
+      "id": 2,
+      "image": "https://images-ext-1.discordapp.net/external/Yewp1yH-cpq8Fgygf-0kKWiGUwK4CUW6vrwM_5qPLwY/https/animehunch.com/wp-content/uploads/2023/01/Aki-Chainsawman.jpg?format=webp",
+      "name": "Samuel",
+      "nickname": "Samuelito",
+      "surname": "Haring"
+    },
+    {
+      "id": 3,
+      "image": "https://i1.sndcdn.com/artworks-DCs5M8Xy0IYKVsqP-5O0ZyQ-t500x500.jpg",
+      "name": "Matej",
+      "nickname": "Moarari",
+      "surname": "Randziak"
+    },
+    {
+      "id": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvyZyRob3RlZjvWGkUj5Fll7NAUPiEZYQakw&s",
+      "name": "Matus",
+      "nickname": "Kutik",
+      "surname": "Bucko"
+    },
+    {
+      "id": 5,
+      "image": "https://s.yimg.com/ny/api/res/1.2/ITFAbxtzntLanHDJb7ABNw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTc3NTtjZj13ZWJw/https://media.zenfs.com/en/know_your_meme_909/e62f0fff99985de7d1a755c38d137e67",
+      "name": "Tomas",
+      "nickname": "Jurcacik",
+      "surname": "Jurcak"
+    },
+    {
+      "id": 6,
+      "image": "https://cdn.discordapp.com/attachments/1465277883777024082/1469426348115099721/Screenshot_20260206_211508_Gallery.jpg?ex=69ca312e&is=69c8dfae&hm=3158bf91b369476112530358e31bf59d55d4fbbeae0799e264a9443f8efcf3a1&",
+      "name": "Adrian",
+      "nickname": "BigRed",
+      "surname": "Cervenka"
+    },
+    {
+      "id": 7,
+      "image": "https://cdn.shopify.com/s/files/1/0209/9589/9456/files/israeli_flag.jpg?v=1548460595",
+      "name": "Marcus",
+      "nickname": "Jew",
+      "surname": "Martis"
+    },
+    {
+      "id": 8,
+      "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/68c9112594d10f7e9dd591c4/formal-photo/94387b0f-c431-49e2-b562-6a357f415c2d",
+      "name": "Martin",
+      "nickname": "Jeliman",
+      "surname": "Jelinek"
+    },
+    {
+      "id": 9,
+      "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5efee63f1b04f230d150c5ce/formal-photo/e18f5e4d-9a8d-4196-9e18-30ebf1b60dc4",
+      "name": "Milan",
+      "nickname": "Nalimovec",
+      "surname": "Kokina"
+    },
+    {
+      "id": 10,
+      "image": "https://img.hockeyslovakia.sk/Player/231280/MarkoMIHALI%C4%8CKA.jpg",
+      "name": "Marko",
+      "nickname": "\u15f0\u15e9\u1587KE\u144e\u1614IE",
+      "surname": "Mihalicka"
+    },
+    {
+      "id": 11,
+      "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6592fd86dc8b723834ae04/formal-photo/7ab0b847-749f-42e5-af17-ca7f8a12f32d",
+      "name": "Samuel",
+      "nickname": "Samis",
+      "surname": "Uhr\u00edk"
+    },
+    {
+      "id": 12,
+      "image": "https://eshop.banchem.sk/userdata/cache/images/storecards/000193/600/000193_mop%20strapcovy%20bavlneny%20140%20180%20220%20250%20IT-600x800.jpg",
+      "name": "Matus",
+      "nickname": "Holenka",
+      "surname": "Holecka"
+    },
+    {
+      "id": 13,
+      "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6596c286dc8b72383529e0/formal-photo/6ac3297a-522f-460c-9c0f-6ce714ef6c39",
+      "name": "Lukas",
+      "nickname": "Vindik",
+      "surname": "Vindis"
+    },
+    {
+      "id": 14,
+      "image": "https://www.zeriavplus.sk/wp-content/uploads/2022/11/bager-vykopove-prace-liptovsky-mikulas.jpg",
+      "name": "Pato",
+      "nickname": "Patotvorba",
+      "surname": "Korba"
+    },
+    {
+      "id": 15,
+      "image": "https://e7.pngegg.com/pngimages/757/1018/png-clipart-apple-logo-apple-desktop-models-logo-computer-wallpaper.png",
+      "name": "Daniel",
+      "nickname": "Litwil",
+      "surname": "Barta"
+    },
+    {
+      "id": 16,
+      "image": "https://blog.blue-style.cz/wp-content/uploads/2016/07/Detail-obliceje.jpg",
+      "name": "David",
+      "nickname": "Dejvid",
+      "surname": "Skula"
+    },
+    {
+      "id": 17,
+      "image": "https://thumbs.dreamstime.com/b/detailed-king-chess-piece-isolated-white-background-representing-most-important-piece-chess-game-king-chess-364212994.jpg",
+      "name": "Rasto",
+      "nickname": "Chessmaster",
+      "surname": "Patak"
+    },
+    {
+      "id": 18,
+      "image": "https://static.vecteezy.com/system/resources/thumbnails/044/280/984/small/stack-of-books-on-a-brown-background-concept-for-world-book-day-photo.jpg",
+      "name": "Karolina",
+      "nickname": "Kaja",
+      "surname": "Kmetova"
+    },
+    {
+      "id": 19,
+      "image": "https://i.pinimg.com/736x/e2/ee/c4/e2eec4dc31feec8c20a3db33aa3c61af.jpg",
+      "name": "Samuel",
+      "nickname": "Zap_Zap",
+      "surname": "Martis"
+    },
+    {
+      "id": 20,
+      "image": "https://m.media-amazon.com/images/I/51OwzCxWJCS.jpg",
+      "name": "Martin",
+      "nickname": "Boywithguns",
+      "surname": "Deglovic"
+    }
+  ]
+}
