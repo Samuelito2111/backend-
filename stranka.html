@@ -169,7 +169,7 @@
     async function fetchData() {
         const statusDiv = document.getElementById('status');
         try {
-            const response = await fetch('https://samuelito2111.github.io/backend-/data.json');
+            const response = await fetch('https://backend-3qza.onrender.com/');
             if (!response.ok) throw new Error();
             const data = await response.json();
             allStudents = data.students; // Uložíme dáta
