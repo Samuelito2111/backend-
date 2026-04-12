@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify
 from flask_cors import CORS # Nezabudni: pip install flask-cors
 
@@ -48,6 +49,6 @@ def get_one_student(student_id):
         return jsonify(student)
     return jsonify({"error": "Student nenajdeny"}), 404
 
-if __name__ == '__main__':
-    # Spustíme na porte 5000
-    app.run(port=5000, debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
