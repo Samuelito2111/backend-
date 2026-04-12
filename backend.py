@@ -15,7 +15,7 @@ databaza = {
         {"id": 3, "name": "Matej", "surname": "Randziak", "nickname": "Moarari", "image": "https://i1.sndcdn.com/artworks-DCs5M8Xy0IYKVsqP-5O0ZyQ-t500x500.jpg"},
         {"id": 4, "name": "Matus", "surname": "Bucko", "nickname": "Kutik", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvyZyRob3RlZjvWGkUj5Fll7NAUPiEZYQakw&s"},
         {"id": 5, "name": "Tomas", "surname": "Jurcak", "nickname": "Jurcacik", "image": "https://s.yimg.com/ny/api/res/1.2/ITFAbxtzntLanHDJb7ABNw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTc3NTtjZj13ZWJw/https://media.zenfs.com/en/know_your_meme_909/e62f0fff99985de7d1a755c38d137e67"},
-        {"id": 6, "name": "Adrian", "surname": "Cervenka", "nickname": "BigRed", "image": "https://cdn.discordapp.com/attachments/1465277883777024082/1469426348115099721/Screenshot_20260206_211508_Gallery.jpg?ex=69ca312e&is=69c8dfae&hm=3158bf91b369476112530358e31bf59d55d4fbbeae0799e264a9443f8efcf3a1&"},
+        {"id": 6, "name": "Adrian", "surname": "Cervenka", "nickname": "BigRed", "image": "https://www.instagram.com/p/DWe4AbiFLjd/"},
         {"id": 7, "name": "Marcus", "surname": "Martis", "nickname": "Jew", "image": "https://cdn.shopify.com/s/files/1/0209/9589/9456/files/israeli_flag.jpg?v=1548460595"},
         {"id": 8, "name": "Martin", "surname": "Jelinek", "nickname": "Jeliman", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/68c9112594d10f7e9dd591c4/formal-photo/94387b0f-c431-49e2-b562-6a357f415c2d"},
         {"id": 9, "name": "Milan", "surname": "Kokina", "nickname": "Nalimovec", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5efee63f1b04f230d150c5ce/formal-photo/e18f5e4d-9a8d-4196-9e18-30ebf1b60dc4"},
