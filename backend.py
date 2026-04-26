@@ -32,7 +32,7 @@ databaza = {
     ]
 }
 
-# 2. OSOBNOSTI PRE AI
+# 2. OSOBNOSTI SPOLUŽIAKOV PRE AI
 personalities = {
     "Dzejna": "Si Janka. Miluješ módu, estetiku a si vždy milá ✨.",
     "Samuelito": "Si Samuelito. Si drsný anime hrdina, trochu tajomný 😎.",
@@ -49,16 +49,16 @@ personalities = {
     "Vindik": "Si Vindik. Si futbalový mozog, miluješ taktiku 🏟️.",
     "Patotvorba": "Si Patotvorba. Si majster bagerista, tvoj svet sú stroje a stavby 🏗️.",
     "Litwil": "Si Litwil. Si fanúšik Apple, miluješ čistý dizajn a moderné veci 🍎.",
-    "Dejvid": "Si Dejvid. Si cestovateľ, tvojou odpoveďou je dobrodružstvo ✈️.",
-    "Chessmaster": "Si Chessmaster. Premýšľaš tri kroky dopredu, život je šach ♔.",
-    "Kaja": "Si Kaja. Si inteligentná, miluješ knihy a vzdelávanie 📚.",
-    "Zap_Zap": "Si Zap_Zap. Si plný energie a nápadov, ako elektrický výboj ⚡.",
-    "Boywithguns": "Si Boywithguns. Máš rád akciu a nebojíš sa výziev 💥."
+    "Dejvid": "Si David. Si cestovateľ, tvojou odpoveďou je dobrodružstvo ✈️.",
+    "Chessmaster": "Si Rasto. Premýšľaš tri kroky dopredu, život je šach ♔.",
+    "Kaja": "Si Karolina. Si inteligentná, miluješ knihy a vzdelávanie 📚.",
+    "Zap_Zap": "Si Samuel Martis. Si plný energie a nápadov, ako elektrický výboj ⚡.",
+    "Boywithguns": "Si Martin Deglovic. Máš rád akciu a nebojíš sa výziev 💥."
 }
 
 @app.route('/')
 def home():
-    return jsonify({"status": "online", "message": "Backend beží!"})
+    return jsonify({"message": "Backend beží!", "status": "online"})
 
 @app.route('/api')
 def get_students():
@@ -68,49 +68,59 @@ def get_students():
 def chat():
     try:
         data = request.json
-        user_text = data.get('message')
+        user_msg = data.get('message')
         nick = data.get('nickname')
         
-        # Získanie kľúča z Renderu
+        # Získanie API kľúča z premenných prostredia Renderu
         api_key = os.environ.get("GROK_API_KEY")
         if not api_key:
-            return jsonify({"error": "Chýba API kľúč v Renderi!"}), 500
+            return jsonify({"error": "Chýba API kľúč na serveri!"}), 500
 
-        # Výber osobnosti
-        system_prompt = personalities.get(nick, "Si priateľský spolužiak.")
-        
-        payload = {
-            "model": "grok-beta",
-            "messages": [
-                {"role": "system", "content": f"{system_prompt} Odpovedaj stručne, kamošsky a po slovensky."},
-                {"role": "user", "content": user_text}
-            ],
-            "temperature": 0.7
-        }
-        
+        # Výber osobnosti podľa prezývky
+        persona = personalities.get(nick, "Si priateľský spolužiak.")
+
+        # Príprava "requestu" pre Grok (xAI)
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
+        
+        payload = {
+            "model": "grok-beta",  # Správny názov modelu pre xAI
+            "messages": [
+                {
+                    "role": "system", 
+                    "content": f"{persona} Odpovedaj stručne, kamošsky a výhradne po slovensky."
+                },
+                {
+                    "role": "user", 
+                    "content": user_msg
+                }
+            ],
+            "stream": False,
+            "temperature": 0.7
+        }
 
-        # Volanie xAI
+        # Odoslanie požiadavky na xAI API
         response = requests.post(
             "https://api.x.ai/v1/chat/completions",
             headers=headers,
             json=payload,
-            timeout=15
+            timeout=20
         )
-        
-        if response.status_code != 200:
-            print(f"Grok Error: {response.text}")
-            return jsonify({"error": "AI neodpovedá"}), response.status_code
 
-        return jsonify(response.json())
+        if response.status_code == 200:
+            return jsonify(response.json())
+        else:
+            # Ak AI vráti chybu, zapíšeme ju do logov v Renderi
+            print(f"Grok API Error: {response.status_code} - {response.text}")
+            return jsonify({"error": "AI momentálne neodpovedá"}), response.status_code
 
     except Exception as e:
-        print(f"Chyba: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        print(f"Systémová chyba: {str(e)}")
+        return jsonify({"error": "Interná chyba servera"}), 500
 
 if __name__ == "__main__":
+    # Render prideluje port automaticky cez premennú PORT
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
