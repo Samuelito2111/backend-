@@ -10,7 +10,7 @@ databaza = {"students": [
     {"id": 2, "name": "Samuel", "surname": "Haring", "nickname": "Samuelito", "image": "https://animehunch.com/wp-content/uploads/2023/01/Aki-Chainsawman.jpg"},
     {"id": 3, "name": "Matej", "surname": "Randziak", "nickname": "Moarari", "image": "https://i1.sndcdn.com/artworks-DCs5M8Xy0IYKVsqP-5O0ZyQ-t500x500.jpg"},
     {"id": 4, "name": "Matus", "surname": "Bucko", "nickname": "Kutik", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvyZyRob3RlZjvWGkUj5Fll7NAUPiEZYQakw&s"},
-    {"id": 5, "name": "Tomas", "surname": "Jurcak", "nickname": "Jurcacik", "image": "https://s.yimg.com/ny/api/res/1.2/ITFAbxtzntLanHDJb7ABNw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTc3NTtjZj13ZWJw/https/media.zenfs.com/en/know_your_meme_909/e62f0fff99985de7d1a755c38d137e67"},
+    {"id": 5, "name": "Tomas", "surname": "Jurcak", "nickname": "Jurcacik", "image": "https://i.postimg.cc/mD3Vf88n/tj.png"},
     {"id": 6, "name": "Adrian", "surname": "Cervenka", "nickname": "BigRed", "image": "https://i.pinimg.com/736x/75/42/4f/75424f660cca53f4d1f57af0ab7084fc.jpg"},
     {"id": 7, "name": "Marcus", "surname": "Martis", "nickname": "Jew", "image": "https://cdn.shopify.com/s/files/1/0209/9589/9456/files/israeli_flag.jpg?v=1548460595"},
     {"id": 8, "name": "Martin", "surname": "Jelinek", "nickname": "Jeliman", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/68c9112594d10f7e9dd591c4/formal-photo/94387b0f-c431-49e2-b562-6a357f415c2d"},
@@ -36,17 +36,17 @@ def chat():
     try:
         data = request.json
         api_key = os.environ.get("GROK_API_KEY")
+        # ZMENA MODELU NA grok-2 (toto opraví tvoju chybu)
         res = requests.post(
             "https://api.x.ai/v1/chat/completions",
             headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
             json={
-                "model": "grok-beta",
+                "model": "grok-2", 
                 "messages": [
-                    {"role": "system", "content": f"Si spolužiak {data.get('nickname')}. Odpovedaj stručne a slovensky."},
+                    {"role": "system", "content": f"Si spolužiak {data.get('nickname')}. Odpovedaj stručne."},
                     {"role": "user", "content": data.get('message')}
                 ]
-            },
-            timeout=15
+            }
         )
         return jsonify(res.json()), res.status_code
     except Exception as e:
