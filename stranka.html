@@ -3,239 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naša Trieda | AI Edition</title>
+    <title>Naša Trieda | AI</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        h1 { margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.3s;
-            border: 1px solid #334155;
-        }
-
-        .card:hover { transform: translateY(-5px); }
-
-        .card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-        }
-
-        .nickname { color: var(--primary); font-weight: bold; display: block; margin: 5px 0; }
-
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: opacity 0.2s;
-        }
-
-        button:hover { opacity: 0.8; }
-
-        /* Chat Window */
-        #chat-window {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            height: 450px;
-            background: var(--card-bg);
-            border-radius: 15px;
-            display: none;
-            flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 1px solid var(--primary);
-            z-index: 1000;
-        }
-
-        .chat-header {
-            background: var(--primary);
-            padding: 15px;
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .msg {
-            padding: 8px 12px;
-            border-radius: 10px;
-            max-width: 80%;
-            font-size: 14px;
-        }
-
+        :root { --primary: #6366f1; --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 15px; text-align: center; border: 1px solid #334155; }
+        .card img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        button { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; margin-top: 10px; }
+        #chat-window { position: fixed; bottom: 20px; right: 20px; width: 320px; height: 400px; background: var(--card-bg); border-radius: 15px; display: none; flex-direction: column; border: 1px solid var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .chat-header { background: var(--primary); padding: 10px; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; }
+        #chat-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .msg { padding: 8px 12px; border-radius: 10px; max-width: 80%; font-size: 14px; }
         .user-msg { background: var(--primary); align-self: flex-end; }
         .ai-msg { background: #334155; align-self: flex-start; }
-        .error-msg { background: #7f1d1d; color: #fecaca; font-size: 12px; align-self: center; }
-
-        .chat-input {
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #334155;
-        }
-
-        input {
-            flex: 1;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            padding: 8px;
-            border-radius: 5px;
-        }
+        .chat-input { padding: 10px; display: flex; gap: 5px; border-top: 1px solid #334155; }
+        input { flex: 1; background: #0f172a; border: 1px solid #334155; color: white; padding: 5px; border-radius: 5px; }
     </style>
 </head>
 <body>
-
-    <h1>Naša Trieda</h1>
-    <div class="grid" id="student-grid">
-        </div>
+    <h1>NAŠA TRIEDA</h1>
+    <div class="grid" id="grid"></div>
 
     <div id="chat-window">
-        <div class="chat-header">
-            <span id="chat-with-name">Chat</span>
-            <i class="fas fa-times" style="cursor:pointer" onclick="closeChat()"></i>
-        </div>
+        <div class="chat-header"><span id="chat-title">Chat</span><span onclick="closeChat()" style="cursor:pointer">&times;</span></div>
         <div id="chat-messages"></div>
         <div class="chat-input">
-            <input type="text" id="user-input" placeholder="Napíš správu...">
-            <button onclick="sendMessage()">Poslať</button>
+            <input type="text" id="userInput" placeholder="Napíš niečo...">
+            <button onclick="sendMessage()">OK</button>
         </div>
     </div>
 
     <script>
-        const BACKEND_URL = 'https://backend-3qze.onrender.com';
-        let activeNickname = "";
+        const API_URL = 'https://backend-3qze.onrender.com';
+        let currentNick = "";
 
-        // 1. Načítanie študentov z tvojho API
-        async function loadStudents() {
-            try {
-                const res = await fetch(`${BACKEND_URL}/api`);
-                const data = await res.json();
-                const grid = document.getElementById('student-grid');
-                
-                data.students.forEach(s => {
-                    grid.innerHTML += `
-                        <div class="card">
-                            <img src="${s.image}" alt="${s.name}">
-                            <h3>${s.name} ${s.surname}</h3>
-                            <span class="nickname">@${s.nickname}</span>
-                            <button onclick="openChat('${s.name}', '${s.nickname}')">
-                                <i class="fas fa-comments"></i> Chat s AI
-                            </button>
-                        </div>
-                    `;
-                });
-            } catch (err) {
-                console.error("Chyba pri načítaní študentov:", err);
-            }
+        async function load() {
+            const res = await fetch(`${API_URL}/api`);
+            const data = await res.json();
+            const grid = document.getElementById('grid');
+            data.students.forEach(s => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <img src="${s.image}">
+                        <h3>${s.name}</h3>
+                        <p style="color:var(--primary)">@${s.nickname}</p>
+                        <button onclick="openChat('${s.name}', '${s.nickname}')">Chat s AI</button>
+                    </div>`;
+            });
         }
 
-        function openChat(name, nickname) {
-            activeNickname = nickname;
-            document.getElementById('chat-with-name').innerText = "Chat s: " + name;
+        function openChat(name, nick) {
+            currentNick = nick;
+            document.getElementById('chat-title').innerText = name;
             document.getElementById('chat-window').style.display = 'flex';
             document.getElementById('chat-messages').innerHTML = "";
-            addMessage(`Ahoj, ja som ${name}! Ako sa máš?`, 'ai');
         }
 
-        function closeChat() {
-            document.getElementById('chat-window').style.display = 'none';
-        }
+        function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
 
-        function addMessage(text, type) {
-            const div = document.createElement('div');
-            div.className = `msg ${type}-msg`;
-            div.innerText = text;
-            const container = document.getElementById('chat-messages');
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // 2. Odoslanie správy na backend
         async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const text = input.value.trim();
-            if (!text) return;
+            const inp = document.getElementById('userInput');
+            const txt = inp.value.trim();
+            if(!txt) return;
 
-            addMessage(text, 'user');
-            input.value = "";
+            const msgDiv = document.getElementById('chat-messages');
+            msgDiv.innerHTML += `<div class="msg user-msg">${txt}</div>`;
+            inp.value = "";
 
             try {
-                const response = await fetch(`${BACKEND_URL}/api/chat`, {
+                const res = await fetch(`${API_URL}/api/chat`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: text,
-                        nickname: activeNickname
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ message: txt, nickname: currentNick })
                 });
-
-                const data = await response.json();
-
-                if (data.error) {
-                    addMessage("Chyba: " + data.error, 'error');
-                } else {
-                    // Spracovanie odpovede od Grok (xAI format)
-                    const aiReply = data.choices[0].message.content;
-                    addMessage(aiReply, 'ai');
-                }
-            } catch (err) {
-                addMessage("Server je momentálne offline. Skús to o chvíľu.", 'error');
+                const data = await res.json();
+                
+                // Oprava: Grok vracia choices[0].message.content
+                const reply = data.choices ? data.choices[0].message.content : (data.error || "Skús to znova.");
+                msgDiv.innerHTML += `<div class="msg ai-msg">${reply}</div>`;
+                msgDiv.scrollTop = msgDiv.scrollHeight;
+            } catch (e) {
+                msgDiv.innerHTML += `<div class="msg ai-msg" style="color:red">Chyba pripojenia.</div>`;
             }
         }
-
-        // Enter v inpute odošle správu
-        document.getElementById('user-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        loadStudents();
+        load();
     </script>
 </body>
 </html>
