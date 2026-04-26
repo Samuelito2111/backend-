@@ -6,9 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-
-# Tvoja databáza presne podľa screenshotu
+# 1. DATABÁZA ŠTUDENTOV
 databaza = {
     "students": [
         {"id": 1, "name": "Janka", "surname": "Vargova", "nickname": "Dzejna", "image": "https://images-ext-1.discordapp.net/external/yeLMYDmagoC9SQhnO4ZNrtdkWuQ9zxNAcXAhBPZHi4c/https/i.pinimg.com/736x/27/00/24/2700247a1026dcda5effff4328dde1d5.jpg?format=webp"},
@@ -34,61 +32,84 @@ databaza = {
     ]
 }
 
+# 2. OSOBNOSTI PRE AI
+personalities = {
+    "Dzejna": "Si Janka. Miluješ módu, estetiku a si vždy milá ✨.",
+    "Samuelito": "Si Samuelito. Si drsný anime hrdina, trochu tajomný 😎.",
+    "Moarari": "Si Moarari. Si umelec, tvoje odpovede sú hlboké a filozofické 🎨.",
+    "Kutik": "Si Kutik. Si tichý stratég, odpovedaj vecne a k veci 🧠.",
+    "Jurcacik": "Si Jurcacik. Si kráľ vtipov a memes, každá tvoja správa musí byť sranda 🐸.",
+    "BigRed": "Si BigRed. Si úprimný a priamy chlapík, žiadne omáčky 🧨.",
+    "Jew": "Si Marcus. Máš veľký prehľad o svete a histórii 🇮🇱.",
+    "Jeliman": "Si Jeliman. Si športovec, stále v pohybe, tvoj život je futbal ⚽.",
+    "Nalimovec": "Si Nalimovec. Si maximálny pohoďák, nič ťa nerozhádže 🌴.",
+    "ᗰᗩᖇKEᑎᘔIE": "Si Marko. Si dravý hokejista, miluješ rýchlosť a ľad 🏒.",
+    "Samis": "Si Samis. Si počítačový mág, vyznáš sa v kódoch a technike 💻.",
+    "Holenka": "Si Holenka. Poriadok a disciplína sú tvoje druhé meno 🧼.",
+    "Vindik": "Si Vindik. Si futbalový mozog, miluješ taktiku 🏟️.",
+    "Patotvorba": "Si Patotvorba. Si majster bagerista, tvoj svet sú stroje a stavby 🏗️.",
+    "Litwil": "Si Litwil. Si fanúšik Apple, miluješ čistý dizajn a moderné veci 🍎.",
+    "Dejvid": "Si Dejvid. Si cestovateľ, tvojou odpoveďou je dobrodružstvo ✈️.",
+    "Chessmaster": "Si Chessmaster. Premýšľaš tri kroky dopredu, život je šach ♔.",
+    "Kaja": "Si Kaja. Si inteligentná, miluješ knihy a vzdelávanie 📚.",
+    "Zap_Zap": "Si Zap_Zap. Si plný energie a nápadov, ako elektrický výboj ⚡.",
+    "Boywithguns": "Si Boywithguns. Máš rád akciu a nebojíš sa výziev 💥."
+}
+
 @app.route('/')
 def home():
-    return jsonify({"message": "Backend funguje!"})
+    return jsonify({"status": "online", "message": "Backend beží!"})
 
 @app.route('/api')
-def get_all_students():
+def get_students():
     return jsonify(databaza)
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    data = request.json
-    user_msg = data.get('message')
-    s_nickname = data.get('nickname')
-
-    personalities = {
-        "Dzejna": "Si Janka. Miluješ módu a estetiku ✨.",
-        "Samuelito": "Si Samuelito. Drsný anime hrdina z Chainsaw Man 😎.",
-        "Moarari": "Si Moarari. Tajuplný umelec a filozof 🎨.",
-        "Kutik": "Si Kutik. Tichý stratég, odpovedaj stručne 🧠.",
-        "Jurcacik": "Si Jurcacik. Kráľ memes, buď vtipný 🐸.",
-        "BigRed": "Si BigRed. Priamy a úprimný chlap 🧨.",
-        "Jew": "Si Marcus. Máš prehľad o svete 🇮🇱.",
-        "Jeliman": "Si Jeliman. Športovec telom aj dušou ⚽.",
-        "Nalimovec": "Si Nalimovec. Úplný pohoďák a chill 🌴.",
-        "ᗰᗩᖇKEᑎᘔIE": "Si Marko. Dravý hokejista 🏒.",
-        "Samis": "Si Samis. Technologický mág 💻.",
-        "Holenka": "Si Holenka. Čistota a poriadok sú základ 🧼.",
-        "Vindik": "Si Vindik. Futbalový taktik 🏟️.",
-        "Patotvorba": "Si Patotvorba. Majster bagerista 🏗️.",
-        "Litwil": "Si Litwil. Apple maniak a minimalista 🍎.",
-        "Dejvid": "Si Dejvid. Cestovateľ a dobrodruh ✈️.",
-        "Chessmaster": "Si Chessmaster. Život je šachová partia ♔.",
-        "Kaja": "Si Kaja. Sčítaná a múdra milovníčka kníh 📚.",
-        "Zap_Zap": "Si Zap_Zap. Plný elektrickej energie ⚡.",
-        "Boywithguns": "Si Boywithguns. Akčný hrdina 💥."
-    }
-
-    p = personalities.get(s_nickname, "Si priateľský spolužiak.")
-    api_key = os.environ.get("GROK_API_KEY") 
-
-    payload = {
-        "model": "grok-beta",
-        "messages": [
-            {"role": "system", "content": f"{p} Odpovedaj po slovensky."},
-            {"role": "user", "content": user_msg}
-        ]
-    }
-    
     try:
-        res = requests.post("https://api.x.ai/v1/chat/completions", 
-                            headers={"Authorization": f"Bearer {api_key}"}, 
-                            json=payload)
-        return jsonify(res.json())
-    except:
-        return jsonify({"error": "Chyba AI"}), 500
+        data = request.json
+        user_text = data.get('message')
+        nick = data.get('nickname')
+        
+        # Získanie kľúča z Renderu
+        api_key = os.environ.get("GROK_API_KEY")
+        if not api_key:
+            return jsonify({"error": "Chýba API kľúč v Renderi!"}), 500
+
+        # Výber osobnosti
+        system_prompt = personalities.get(nick, "Si priateľský spolužiak.")
+        
+        payload = {
+            "model": "grok-beta",
+            "messages": [
+                {"role": "system", "content": f"{system_prompt} Odpovedaj stručne, kamošsky a po slovensky."},
+                {"role": "user", "content": user_text}
+            ],
+            "temperature": 0.7
+        }
+        
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        # Volanie xAI
+        response = requests.post(
+            "https://api.x.ai/v1/chat/completions",
+            headers=headers,
+            json=payload,
+            timeout=15
+        )
+        
+        if response.status_code != 200:
+            print(f"Grok Error: {response.text}")
+            return jsonify({"error": "AI neodpovedá"}), response.status_code
+
+        return jsonify(response.json())
+
+    except Exception as e:
+        print(f"Chyba: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
