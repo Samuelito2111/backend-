@@ -7,40 +7,31 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #0d1117; color: white; margin: 0; padding: 40px; display: flex; flex-direction: column; align-items: center; }
-        h1 { text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; }
-        
-        .search-container { width: 100%; max-width: 400px; margin-bottom: 40px; }
-        #search { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; text-align: center; }
-
+        h1 { text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; color: #8b5cf6; }
+        .search-container { width: 100%; max-width: 430px; margin-bottom: 40px; }
+        #search { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: #8b949e; text-align: center; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; }
-        
-        .card { background: #161b22; border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #30363d; display: flex; flex-direction: column; align-items: center; }
+        .card { background: #161b22; border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #30363d; position: relative; }
         .card img { width: 100px; height: 100px; border-radius: 15px; object-fit: cover; margin-bottom: 15px; }
         .card h3 { margin: 5px 0; font-size: 18px; }
-        .nickname { color: #5865f2; font-size: 13px; margin-bottom: 15px; }
-        
+        .nickname { color: #5865f2; font-size: 13px; margin-bottom: 15px; display: block; }
         .chat-btn { background: #5865f2; color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .id-tag { background: #0d1117; color: #484f58; font-size: 11px; padding: 5px 15px; border-radius: 4px; margin-top: 15px; width: 80%; }
+        .id-tag { background: #0d1117; color: #484f58; font-size: 11px; padding: 5px; border-radius: 4px; margin-top: 15px; }
 
-        /* Chat okno */
         #chat-window { position: fixed; bottom: 20px; right: 20px; width: 350px; height: 480px; background: #161b22; border-radius: 12px; display: none; flex-direction: column; border: 1px solid #5865f2; box-shadow: 0 8px 32px rgba(0,0,0,0.8); z-index: 1000; }
-        .chat-header { background: #21262d; padding: 15px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; border-bottom: 1px solid #30363d; }
+        .chat-header { background: #21262d; padding: 15px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; }
         #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 14px; border-radius: 10px; max-width: 85%; font-size: 14px; line-height: 1.4; }
+        .msg { padding: 10px 14px; border-radius: 10px; max-width: 85%; font-size: 14px; }
         .user-msg { background: #5865f2; align-self: flex-end; }
         .ai-msg { background: #30363d; align-self: flex-start; }
-        .chat-input { padding: 15px; display: flex; gap: 10px; background: #161b22; border-radius: 0 0 12px 12px; }
+        .chat-input { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #30363d; }
         #userInput { flex: 1; background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 6px; }
-        .send-btn { background: #238636; color: white; border: none; padding: 0 15px; border-radius: 6px; cursor: pointer; }
+        .send-btn { background: #10b981; color: white; border: none; padding: 0 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-
     <h1>NAŠA TRIEDA</h1>
-    <div class="search-container">
-        <input type="text" id="search" placeholder="Hľadať študenta...">
-    </div>
-
+    <div class="search-container"><input type="text" id="search" placeholder="Hľadať študenta..."></div>
     <div class="grid" id="grid"></div>
 
     <div id="chat-window">
@@ -57,36 +48,39 @@
         let currentNick = "";
 
         async function load() {
-            const res = await fetch(`${API_URL}/api`);
-            const data = await res.json();
-            const grid = document.getElementById('grid');
-            data.students.forEach(s => {
-                grid.innerHTML += `
-                    <div class="card">
-                        <img src="${s.image}">
-                        <h3>${s.name} ${s.surname || ''}</h3>
-                        <span class="nickname">@${s.nickname}</span>
-                        <button class="chat-btn" onclick="openChat('${s.name}', '${s.nickname}')">
-                            <i class="fas fa-comments"></i> Chat s AI
-                        </button>
-                        <div class="id-tag">ID: ${s.id < 10 ? '0'+s.id : s.id}</div>
-                    </div>`;
-            });
+            try {
+                const res = await fetch(`${API_URL}/api`);
+                const data = await res.json();
+                const grid = document.getElementById('grid');
+                grid.innerHTML = "";
+                data.students.forEach(s => {
+                    grid.innerHTML += `
+                        <div class="card">
+                            <img src="${s.image}">
+                            <h3>${s.name} ${s.surname || ''}</h3>
+                            <span class="nickname">@${s.nickname}</span>
+                            <button class="chat-btn" onclick="openChat('${s.name}', '${s.nickname}')">
+                                <i class="fas fa-comments"></i> Chat s AI
+                            </button>
+                            <div class="id-tag">ID: ${s.id < 10 ? '0'+s.id : s.id}</div>
+                        </div>`;
+                });
+            } catch (e) { console.error("Chyba načítania", e); }
         }
 
         function openChat(name, nick) {
             currentNick = nick;
             document.getElementById('chat-title').innerText = "Chat s: " + name;
             document.getElementById('chat-window').style.display = 'flex';
-            document.getElementById('chat-messages').innerHTML = `<div class="msg ai-msg">Ahoj, ja som ${name}! Ako sa máš?</div>`;
+            document.getElementById('chat-messages').innerHTML = `<div class="msg ai-msg">Čau, tu ${name}. Čo máš na srdci?</div>`;
         }
 
         function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
 
         async function sendMessage() {
             const inp = document.getElementById('userInput');
-            if(!inp.value.trim()) return;
-            const txt = inp.value;
+            const txt = inp.value.trim();
+            if(!txt) return;
             const msgDiv = document.getElementById('chat-messages');
             msgDiv.innerHTML += `<div class="msg user-msg">${txt}</div>`;
             inp.value = "";
@@ -98,11 +92,21 @@
                     body: JSON.stringify({ message: txt, nickname: currentNick })
                 });
                 const data = await res.json();
-                const reply = data.choices ? data.choices[0].message.content : (data.error || "Chyba.");
+                
+                // Oprava: hľadáme odpoveď v dátach, inak vypíšeme chybu z xAI
+                let reply = "Chyba.";
+                if (data.choices && data.choices[0].message) {
+                    reply = data.choices[0].message.content;
+                } else if (data.error && data.error.message) {
+                    reply = "X.AI Error: " + data.error.message;
+                } else {
+                    reply = "Server vrátil neznámy formát.";
+                }
+
                 msgDiv.innerHTML += `<div class="msg ai-msg">${reply}</div>`;
                 msgDiv.scrollTop = msgDiv.scrollHeight;
             } catch (e) {
-                msgDiv.innerHTML += `<div class="msg ai-msg" style="color:#ff7b72">Chyba pripojenia k serveru.</div>`;
+                msgDiv.innerHTML += `<div class="msg ai-msg" style="color:red">Backend je pravdepodobne vypnutý (Render Sleep).</div>`;
             }
         }
         load();
