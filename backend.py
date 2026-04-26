@@ -6,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# 1. DATABÁZA ŠTUDENTOV
+# 1. KOMPLETNÁ DATABÁZA ŠTUDENTOV (Všetkých 20 mien a obrázkov)
 databaza = {
     "students": [
         {"id": 1, "name": "Janka", "surname": "Vargova", "nickname": "Dzejna", "image": "https://images-ext-1.discordapp.net/external/yeLMYDmagoC9SQhnO4ZNrtdkWuQ9zxNAcXAhBPZHi4c/https/i.pinimg.com/736x/27/00/24/2700247a1026dcda5effff4328dde1d5.jpg?format=webp"},
@@ -32,7 +32,7 @@ databaza = {
     ]
 }
 
-# 2. OSOBNOSTI SPOLUŽIAKOV PRE AI
+# 2. OSOBNOSTI PRE AI
 personalities = {
     "Dzejna": "Si Janka. Miluješ módu, estetiku a si vždy milá ✨.",
     "Samuelito": "Si Samuelito. Si drsný anime hrdina, trochu tajomný 😎.",
@@ -53,7 +53,7 @@ personalities = {
     "Chessmaster": "Si Rasto. Premýšľaš tri kroky dopredu, život je šach ♔.",
     "Kaja": "Si Karolina. Si inteligentná, miluješ knihy a vzdelávanie 📚.",
     "Zap_Zap": "Si Samuel Martis. Si plný energie a nápadov, ako elektrický výboj ⚡.",
-    "Boywithguns": "Si Martin Deglovic. Máš rád akciu a nebojíš sa výziev 💥."
+    "Boywithguns": "Si Martin Deglovic. Máš rád akciu a nebojíš sa výviezk 💥."
 }
 
 @app.route('/')
@@ -71,37 +71,28 @@ def chat():
         user_msg = data.get('message')
         nick = data.get('nickname')
         
-        # Získanie API kľúča z premenných prostredia Renderu
         api_key = os.environ.get("GROK_API_KEY")
         if not api_key:
-            return jsonify({"error": "Chýba API kľúč na serveri!"}), 500
+            return jsonify({"error": "Chýba API kľúč na serveri"}), 500
 
-        # Výber osobnosti podľa prezývky
+        # Príprava osobnosti
         persona = personalities.get(nick, "Si priateľský spolužiak.")
 
-        # Príprava "requestu" pre Grok (xAI)
+        # Request na xAI (Grok)
         headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}"
         }
         
         payload = {
-            "model": "grok-beta",  # Správny názov modelu pre xAI
+            "model": "grok-beta",
             "messages": [
-                {
-                    "role": "system", 
-                    "content": f"{persona} Odpovedaj stručne, kamošsky a výhradne po slovensky."
-                },
-                {
-                    "role": "user", 
-                    "content": user_msg
-                }
+                {"role": "system", "content": f"{persona} Odpovedaj stručne, kamošsky a po slovensky."},
+                {"role": "user", "content": user_msg}
             ],
-            "stream": False,
             "temperature": 0.7
         }
 
-        # Odoslanie požiadavky na xAI API
         response = requests.post(
             "https://api.x.ai/v1/chat/completions",
             headers=headers,
@@ -112,15 +103,11 @@ def chat():
         if response.status_code == 200:
             return jsonify(response.json())
         else:
-            # Ak AI vráti chybu, zapíšeme ju do logov v Renderi
-            print(f"Grok API Error: {response.status_code} - {response.text}")
-            return jsonify({"error": "AI momentálne neodpovedá"}), response.status_code
+            return jsonify({"error": "AI neodpovedá"}), response.status_code
 
     except Exception as e:
-        print(f"Systémová chyba: {str(e)}")
-        return jsonify({"error": "Interná chyba servera"}), 500
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    # Render prideluje port automaticky cez premennú PORT
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
