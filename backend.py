@@ -6,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# 1. KOMPLETNÁ DATABÁZA ŠTUDENTOV (Všetkých 20 mien a obrázkov)
+# 1. KOMPLETNÁ DATABÁZA ŠTUDENTOV (Všetkých 20)
 databaza = {
     "students": [
         {"id": 1, "name": "Janka", "surname": "Vargova", "nickname": "Dzejna", "image": "https://images-ext-1.discordapp.net/external/yeLMYDmagoC9SQhnO4ZNrtdkWuQ9zxNAcXAhBPZHi4c/https/i.pinimg.com/736x/27/00/24/2700247a1026dcda5effff4328dde1d5.jpg?format=webp"},
@@ -39,21 +39,21 @@ personalities = {
     "Moarari": "Si Moarari. Si umelec, tvoje odpovede sú hlboké a filozofické 🎨.",
     "Kutik": "Si Kutik. Si tichý stratég, odpovedaj vecne a k veci 🧠.",
     "Jurcacik": "Si Jurcacik. Si kráľ vtipov a memes, každá tvoja správa musí byť sranda 🐸.",
-    "BigRed": "Si BigRed. Si úprimný a priamy chlapík, žiadne omáčky 🧨.",
-    "Jew": "Si Marcus. Máš veľký prehľad o svete a histórii 🇮🇱.",
-    "Jeliman": "Si Jeliman. Si športovec, stále v pohybe, tvoj život je futbal ⚽.",
-    "Nalimovec": "Si Nalimovec. Si maximálny pohoďák, nič ťa nerozhádže 🌴.",
-    "ᗰᗩᖇKEᑎᘔIE": "Si Marko. Si dravý hokejista, miluješ rýchlosť a ľad 🏒.",
-    "Samis": "Si Samis. Si počítačový mág, vyznáš sa v kódoch a technike 💻.",
-    "Holenka": "Si Holenka. Poriadok a disciplína sú tvoje druhé meno 🧼.",
-    "Vindik": "Si Vindik. Si futbalový mozog, miluješ taktiku 🏟️.",
+    "BigRed": "Si BigRed. Si úprimný a priamy chlapík 🧨.",
+    "Jew": "Si Marcus. Máš veľký prehľad o svete 🇮🇱.",
+    "Jeliman": "Si Jeliman. Si športovec, tvoj život je futbal ⚽.",
+    "Nalimovec": "Si Nalimovec. Si maximálny pohoďák 🌴.",
+    "ᗰᗩᖇKEᑎᘔIE": "Si Marko. Si dravý hokejista 🏒.",
+    "Samis": "Si Samis. Si počítačový mág 💻.",
+    "Holenka": "Si Holenka. Poriadok a disciplína sú základ 🧼.",
+    "Vindik": "Si Vindik. Si futbalový mozog 🏟️.",
     "Patotvorba": "Si Patotvorba. Si majster bagerista, tvoj svet sú stroje a stavby 🏗️.",
-    "Litwil": "Si Litwil. Si fanúšik Apple, miluješ čistý dizajn a moderné veci 🍎.",
-    "Dejvid": "Si David. Si cestovateľ, tvojou odpoveďou je dobrodružstvo ✈️.",
+    "Litwil": "Si Litwil. Si fanúšik Apple, miluješ čistý dizajn 🍎.",
+    "Dejvid": "Si David. Si cestovateľ a dobrodruh ✈️.",
     "Chessmaster": "Si Rasto. Premýšľaš tri kroky dopredu, život je šach ♔.",
-    "Kaja": "Si Karolina. Si inteligentná, miluješ knihy a vzdelávanie 📚.",
-    "Zap_Zap": "Si Samuel Martis. Si plný energie a nápadov, ako elektrický výboj ⚡.",
-    "Boywithguns": "Si Martin Deglovic. Máš rád akciu a nebojíš sa výviezk 💥."
+    "Kaja": "Si Karolina. Si inteligentná a miluješ knihy 📚.",
+    "Zap_Zap": "Si Samuel Martis. Si plný energie ako elektrický výboj ⚡.",
+    "Boywithguns": "Si Martin Deglovic. Máš rád akciu 💥."
 }
 
 @app.route('/')
@@ -75,10 +75,8 @@ def chat():
         if not api_key:
             return jsonify({"error": "Chýba API kľúč na serveri"}), 500
 
-        # Príprava osobnosti
         persona = personalities.get(nick, "Si priateľský spolužiak.")
 
-        # Request na xAI (Grok)
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}"
@@ -103,7 +101,7 @@ def chat():
         if response.status_code == 200:
             return jsonify(response.json())
         else:
-            return jsonify({"error": "AI neodpovedá"}), response.status_code
+            return jsonify({"error": f"AI Error {response.status_code}"}), response.status_code
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
