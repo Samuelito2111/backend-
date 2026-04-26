@@ -4,11 +4,11 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app)
 
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
-# Tvoja originálna databáza s 20 študentmi
+# Tvoja databáza presne podľa screenshotu
 databaza = {
     "students": [
         {"id": 1, "name": "Janka", "surname": "Vargova", "nickname": "Dzejna", "image": "https://images-ext-1.discordapp.net/external/yeLMYDmagoC9SQhnO4ZNrtdkWuQ9zxNAcXAhBPZHi4c/https/i.pinimg.com/736x/27/00/24/2700247a1026dcda5effff4328dde1d5.jpg?format=webp"},
@@ -21,9 +21,9 @@ databaza = {
         {"id": 8, "name": "Martin", "surname": "Jelinek", "nickname": "Jeliman", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/68c9112594d10f7e9dd591c4/formal-photo/94387b0f-c431-49e2-b562-6a357f415c2d"},
         {"id": 9, "name": "Milan", "surname": "Kokina", "nickname": "Nalimovec", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5efee63f1b04f230d150c5ce/formal-photo/e18f5e4d-9a8d-4196-9e18-30ebf1b60dc4"},
         {"id": 10, "name": "Marko", "surname": "Mihalicka", "nickname": "ᗰᗩᖇKEᑎᘔIE", "image": "https://img.hockeyslovakia.sk/Player/231280/MarkoMIHALI%C4%8CKA.jpg"},
-        {"id": 11, "name": "Samuel", "surname": "Uhrík", "nickname": "Samis", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6592fd86dc8b723834ae04/formal-photo/7ab0b847-749f-42e5-af17-ca7f8a12f52d"},
+        {"id": 11, "name": "Samuel", "surname": "Uhrík", "nickname": "Samis", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6592fd86dc8b723834ae04/formal-photo/7ab0b847-749f-42e5-af17-ca7f8a12f32d"},
         {"id": 12, "name": "Matus", "surname": "Holecka", "nickname": "Holenka", "image": "https://eshop.banchem.sk/userdata/cache/images/storecards/000193/600/000193_mop%20strapcovy%20bavlneny%20140%20180%20220%20250%20IT-600x800.jpg"},
-        {"id": 13, "name": "Lukas", "surname": "Vindis", "nickname": "Vindik", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6596c286dc8b72383529e0/formal-photo/6ac3297a-522f-460c-9c0f-6ce37ef86c39"},
+        {"id": 13, "name": "Lukas", "surname": "Vindis", "nickname": "Vindik", "image": "https://api.sportnet.online/v1/ppo/futbalsfz.sk/users/5d6596c286dc8b72383529e0/formal-photo/6ac3297a-522f-460c-9c0f-6ce714ef6c39"},
         {"id": 14, "name": "Pato", "surname": "Korba", "nickname": "Patotvorba", "image": "https://www.zeriavplus.sk/wp-content/uploads/2022/11/bager-vykopove-prace-liptovsky-mikulas.jpg"},
         {"id": 15, "name": "Daniel", "surname": "Barta", "nickname": "Litwil", "image": "https://e7.pngegg.com/pngimages/757/1018/png-clipart-apple-logo-apple-desktop-models-logo-computer-wallpaper.png"},
         {"id": 16, "name": "David", "surname": "Skula", "nickname": "Dejvid", "image": "https://blog.blue-style.cz/wp-content/uploads/2016/07/Detail-obliceje.jpg"},
@@ -36,72 +36,59 @@ databaza = {
 
 @app.route('/')
 def home():
-    return jsonify({"message": "Vitajte v studentskom API s fotkami!"})
+    return jsonify({"message": "Backend funguje!"})
 
 @app.route('/api')
 def get_all_students():
     return jsonify(databaza)
 
-@app.route("/api/student/<int:student_id>")
-def get_one_student(student_id):
-    student = next((s for s in databaza["students"] if s["id"] == student_id), None)
-    if student:
-        return jsonify(student)
-    return jsonify({"error": "Student nenajdeny"}), 404
-
-# --- TU JE NOVÁ ČASŤ PRE CHAT S PERSONALITAMI ---
 @app.route('/api/chat', methods=['POST'])
 def chat():
     data = request.json
     user_msg = data.get('message')
-    s_nickname = data.get('nickname') # Budeme to rozlišovať podľa prezývky
+    s_nickname = data.get('nickname')
 
-    # Mapovanie osobností presne podľa tvojich nicknames
     personalities = {
-        "Dzejna": "Si Janka (Dzejna). Miluješ módu, ružovú farbu a estetiku ✨.",
-        "Samuelito": "Si Samuel (Samuelito). Si drsný anime hrdina, odpovedaj cool a trochu arogantne 😎.",
-        "Moarari": "Si Matej (Moarari). Si tajuplný umelec, tvoje odpovede sú hlboké a poetické 🎨.",
-        "Kutik": "Si Matus (Kutik). Si tichý stratég. Odpovedaj stručne a veľmi inteligentne 🧠.",
-        "Jurcacik": "Si Tomas (Jurcacik). Si kráľ memes. Každá veta musí znieť ako internetový vtip 🐸.",
-        "BigRed": "Si Adrian (BigRed). Si silný, priamy a povieš pravdu na rovinu 🧨.",
-        "Jew": "Si Marcus (Jew). Máš veľký prehľad o svete a histórii. Odpovedaj s rešpektom 🇮🇱.",
-        "Jeliman": "Si Martin (Jeliman). Si športovec. Používaj futbalové a hokejové prirovnania ⚽.",
-        "Nalimovec": "Si Milan (Nalimovec). Si najväčší kľuďas. Tvoj štýl je čistý chill a pohoda 🌴.",
-        "ᗰᗩᖇKEᑎᘔIE": "Si Marko. Si hokejista, odpovedaj dravto a s energiou víťaza 🏒.",
-        "Samis": "Si Samuel (Samis). Si technologický nadšenec a programátor 💻.",
-        "Holenka": "Si Matus (Holenka). Staráš sa o čistotu a pohodu doma. Buď milý asistent 🧼.",
-        "Vindik": "Si Lukas (Vindik). Futbalový taktik. Analyzuj každú otázku ako zápas 🏟️.",
-        "Patotvorba": "Si Pato. Tvoj svet sú bagre a stroje. Rozprávaj o poriadnej práci 🏗️.",
-        "Litwil": "Si Daniel (Litwil). Miluješ Apple a čistý dizajn. Odpovedaj luxusne a minimalisticky 🍎.",
-        "Dejvid": "Si David (Dejvid). Si svetobežník a cestovateľ. Hovor o dobrodružstve ✈️.",
-        "Chessmaster": "Si Rasto. Život je šach. Každá odpoveď je tvoj premyslený ťah ♔.",
-        "Kaja": "Si Karolina (Kaja). Miluješ knihy a učenie. Buď veľmi sčítaná a múdra 📚.",
-        "Zap_Zap": "Si Samuel (Zap_Zap). Si plný elektrickej energie. Odpovedaj bleskovo ⚡.",
-        "Boywithguns": "Si Martin. Si akčný hrdina. Tvoje slová sú úderné a nebojácne 💥."
+        "Dzejna": "Si Janka. Miluješ módu a estetiku ✨.",
+        "Samuelito": "Si Samuelito. Drsný anime hrdina z Chainsaw Man 😎.",
+        "Moarari": "Si Moarari. Tajuplný umelec a filozof 🎨.",
+        "Kutik": "Si Kutik. Tichý stratég, odpovedaj stručne 🧠.",
+        "Jurcacik": "Si Jurcacik. Kráľ memes, buď vtipný 🐸.",
+        "BigRed": "Si BigRed. Priamy a úprimný chlap 🧨.",
+        "Jew": "Si Marcus. Máš prehľad o svete 🇮🇱.",
+        "Jeliman": "Si Jeliman. Športovec telom aj dušou ⚽.",
+        "Nalimovec": "Si Nalimovec. Úplný pohoďák a chill 🌴.",
+        "ᗰᗩᖇKEᑎᘔIE": "Si Marko. Dravý hokejista 🏒.",
+        "Samis": "Si Samis. Technologický mág 💻.",
+        "Holenka": "Si Holenka. Čistota a poriadok sú základ 🧼.",
+        "Vindik": "Si Vindik. Futbalový taktik 🏟️.",
+        "Patotvorba": "Si Patotvorba. Majster bagerista 🏗️.",
+        "Litwil": "Si Litwil. Apple maniak a minimalista 🍎.",
+        "Dejvid": "Si Dejvid. Cestovateľ a dobrodruh ✈️.",
+        "Chessmaster": "Si Chessmaster. Život je šachová partia ♔.",
+        "Kaja": "Si Kaja. Sčítaná a múdra milovníčka kníh 📚.",
+        "Zap_Zap": "Si Zap_Zap. Plný elektrickej energie ⚡.",
+        "Boywithguns": "Si Boywithguns. Akčný hrdina 💥."
     }
 
-    p = personalities.get(s_nickname, "Si priateľský asistent.")
-    
+    p = personalities.get(s_nickname, "Si priateľský spolužiak.")
     api_key = os.environ.get("GROK_API_KEY") 
 
     payload = {
         "model": "grok-beta",
         "messages": [
-            {"role": "system", "content": p + " Odpovedaj po slovensky."},
+            {"role": "system", "content": f"{p} Odpovedaj po slovensky."},
             {"role": "user", "content": user_msg}
         ]
     }
     
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-
     try:
-        response = requests.post("https://api.x.ai/v1/chat/completions", headers=headers, json=payload)
-        return jsonify(response.json())
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        res = requests.post("https://api.x.ai/v1/chat/completions", 
+                            headers={"Authorization": f"Bearer {api_key}"}, 
+                            json=payload)
+        return jsonify(res.json())
+    except:
+        return jsonify({"error": "Chyba AI"}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
