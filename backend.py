@@ -36,21 +36,22 @@ def chat():
     try:
         data = request.json
         api_key = os.environ.get("GROK_API_KEY")
-        # ZMENA MODELU NA grok-2 (toto opraví tvoju chybu)
+        # Používame grok-2-1212 pre maximálnu kompatibilitu
         res = requests.post(
             "https://api.x.ai/v1/chat/completions",
             headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
             json={
-                "model": "grok-2", 
+                "model": "grok-2-1212", 
                 "messages": [
-                    {"role": "system", "content": f"Si spolužiak {data.get('nickname')}. Odpovedaj stručne."},
+                    {"role": "system", "content": f"Si spolužiak {data.get('nickname')}. Odpovedaj stručne a slovensky."},
                     {"role": "user", "content": data.get('message')}
                 ]
-            }
+            },
+            timeout=10
         )
         return jsonify(res.json()), res.status_code
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": {"message": str(e)}}), 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
